@@ -683,8 +683,10 @@
   transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s, color 0.15s;
 }
 
-.md-typeset .md-button:hover {
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .md-typeset .md-button:hover {
+    transform: translateY(-1px);
+  }
 }
 
 .md-typeset .md-button--primary {
@@ -710,9 +712,15 @@
 }
 
 .md-typeset .grid.cards > ul > li:hover {
-  transform: translateY(-3px);
   border-color: var(--md-typeset-a-color);
   box-shadow: 0 10px 28px var(--galib-glow);
+}
+
+/* the lift only where there is a real pointer: on touch screens :hover sticks after a tap */
+@media (hover: hover) {
+  .md-typeset .grid.cards > ul > li:hover {
+    transform: translateY(-3px);
+  }
 }
 
 .md-typeset .grid.cards > ul > li > hr {
@@ -1262,6 +1270,132 @@ body:has(.galib-hero) [data-md-toggle="search"]:not(:checked) ~ .md-header .md-s
   .md-typeset table:not([class]) td,
   .md-typeset table:not([class]) th {
     padding: 0.55em 0.75em;
+  }
+}
+
+/* Mobile drawer (< 76.25em). Material turns every section into a drill-down panel and the section labels above
+   are `pointer-events: none`, so only the current section could be reached. Here the drawer is one scrolling
+   list: all sections open, label as a heading, links with a touch-sized target. The only panel left is the
+   page's table of contents (the icon on the current page), which slides over the list. */
+@media screen and (max-width: 76.234375em) {
+  .md-nav--primary > .md-nav__list {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: none; /* Material snaps to every item: jerky on long lists */
+    padding-bottom: 2rem;
+  }
+
+  .md-nav--primary .md-nav__item--section > .md-nav {
+    position: static;
+    display: block;
+    height: auto;
+    opacity: 1;
+    transform: none;
+    transition: none;
+    background: transparent;
+  }
+
+  .md-nav--primary .md-nav__item--section > .md-nav > .md-nav__title,
+  .md-nav--primary .md-nav__item--section > .md-nav__link > .md-nav__icon {
+    display: none; /* the back bar and the arrow of the drill-down are not needed any more */
+  }
+
+  .md-nav--primary .md-nav__item--section > .md-nav > .md-nav__list {
+    overflow: visible;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .md-nav--primary .md-nav__link {
+    min-height: 2.5rem; /* ~44px touch target */
+    align-items: center;
+    padding: 0.55rem 1rem 0.55rem 1.25rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .md-nav--primary .md-nav__link:active {
+    background: var(--galib-hover-bg);
+  }
+
+  .md-nav--primary .md-nav__item--section > .md-nav__link {
+    min-height: 0;
+    padding: 0.9rem 1rem 0.3rem;
+    font-size: 0.62rem;
+  }
+
+  .md-nav--primary .md-nav__item {
+    border-top: 0;
+  }
+
+  /* the table-of-contents panel (inside the current page's item) covers the whole drawer */
+  .md-nav--primary .md-nav__item--active > .md-nav--secondary,
+  .md-nav--primary .md-nav__item > .md-nav--secondary {
+    z-index: 2;
+  }
+
+  /* the desktop title style of the table of contents (small caps, no bar) would put the back arrow over the text */
+  .md-nav--primary .md-nav--secondary > .md-nav__title {
+    height: 5.6rem;
+    padding: 3rem 0.8rem 0.2rem;
+    font-size: 0.8rem;
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--md-default-fg-color--light);
+    background: var(--md-default-fg-color--lightest);
+    box-shadow: none;
+  }
+
+  .md-nav--primary .md-nav--secondary .md-nav__link {
+    min-height: 2.2rem;
+    padding: 0.4rem 1rem 0.4rem 1.25rem;
+    font-size: 0.74rem;
+    border-left: 0;
+  }
+
+  /* header: give the buttons room on a narrow phone (title already ellipsised by Material) */
+  .md-header__inner {
+    padding: 0 0.4rem;
+  }
+
+  .md-header__option .md-header__button {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 30em) {
+  /* page content: safe, readable margins; wide blocks scroll inside themselves instead of the page */
+  .md-main .md-content__inner {
+    margin-left: 0.8rem;
+    margin-right: 0.8rem;
+  }
+
+  .md-typeset h1 {
+    font-size: 1.7em;
+  }
+
+  .md-typeset .highlight pre > code,
+  .md-typeset .doc-signature {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .md-typeset .doc-contents {
+    padding-left: 0.7rem;
+  }
+
+  .galib-footer__inner {
+    padding: 1.5rem 1rem 1rem;
+  }
+
+  .galib-footer__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.4rem;
+  }
+
+  .galib-footer__nav a {
+    padding: 0.2rem 0; /* easier to tap */
   }
 }
 
