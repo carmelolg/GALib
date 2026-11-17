@@ -8,12 +8,16 @@ origin (best values between about 0.1 and 2 depending on the seed) rather than e
 settings and seeds to see how exploration changes the result.
 
 Requires numpy:  pip install "carmelolg-galib[numpy]"
+Add --plot to draw the history (needs matplotlib).
 """
+import sys
+
 import numpy as np
 
 from carmelolg.galib import GeneticAlgorithm, PrintProgress, Problem, Stagnation, TargetFitness
 from carmelolg.galib.metrics import gene_spread
 from carmelolg.galib.operators import BlendCrossover, GaussianMutation, Tournament
+from carmelolg.galib.plot import plot_history
 
 DIMENSIONS = 10
 LOW, HIGH = -5.12, 5.12
@@ -46,3 +50,5 @@ if __name__ == "__main__":
     ).run()
     print(f"\nbest value: {result.best.fitness:.4f} after {result.generations} generations ({result.stopped_by})")
     print("best point:", np.round(result.best.genome, 3))
+    if "--plot" in sys.argv:
+        plot_history(result)

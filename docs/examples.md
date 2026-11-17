@@ -2,7 +2,7 @@
 
 Complete programs live in the
 [`examples/`](https://github.com/carmelolg/GALib/tree/main/examples) folder of the repository.
-Run them from the project root after `pip install -e ".[numpy]"`.
+Run them from the project root after `pip install -e ".[numpy,plot]"`. `rastrigin.py --plot` draws the history.
 
 | Example          | Genome                | Shows                                                                          |
 |------------------|-----------------------|--------------------------------------------------------------------------------|
@@ -10,6 +10,7 @@ Run them from the project root after `pip install -e ".[numpy]"`.
 | `knapsack.py`    | list of bits          | the three customisation levels: parameters, operators, a subclassed engine     |
 | `tsp.py`         | permutation           | minimisation, `OrderCrossover`, `InversionMutation`                            |
 | `rastrigin.py`   | numpy array of floats | vectorised `fitness_batch`, `BlendCrossover`, `GaussianMutation`, `gene_spread` |
+| `monitoring.py`  | string                | the `Result`, the history, diversity metrics, `plot_history`                   |
 
 ## Phrase
 
@@ -33,4 +34,10 @@ Run them from the project root after `pip install -e ".[numpy]"`.
 
 ```python
 --8<-- "examples/rastrigin.py"
+```
+
+## Monitoring
+
+```python
+--8<-- "examples/monitoring.py"
 ```

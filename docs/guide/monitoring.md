@@ -17,6 +17,39 @@ After every generation, generation 0 included, the engine records a
 
 They are available in `result.history`, and passed to callbacks and stop conditions as the run goes.
 
+### Reading a run
+
+`run()` returns a [`Result`](../reference/core.md#carmelolg.galib.core.stats.Result): the best individual ever
+seen, why the run stopped, and the whole history.
+
+```python
+result = GeneticAlgorithm(problem, seed=42).run()
+
+result.best.genome     # the best genome found
+result.best.fitness    # its fitness
+result.generations     # generations evolved
+result.stopped_by      # "max_generations" or the name of the stop condition that fired
+result.evaluations     # fitness evaluations spent
+result.population      # the final population (Individual objects)
+```
+
+`result.history` has one `GenerationStats` per generation, generation 0 included, so any series is a list
+comprehension:
+
+```python
+history = result.history
+
+best = [s.best_fitness for s in history]
+mean = [s.mean_fitness for s in history]
+diversity = [s.diversity for s in history]       # may contain None, see "Diversity measures"
+
+# first generation that reached a given fitness, and what it cost
+generation = next(s.generation for s in history if s.best_fitness >= 25)
+print(generation, history[generation].evaluations)
+```
+
+[`examples/monitoring.py`](../examples.md#monitoring) runs all of this on the phrase problem.
+
 ## Stop conditions
 
 The run stops after `max_generations`, or as soon as **any** of the `stop` conditions fires:
@@ -106,6 +139,19 @@ class SaveImprovements(Callback):
 | `gene_spread`            | real-valued genes                       | mean standard deviation of the genes           |
 | `None`                   | anything                                | not measured: saves time on large populations  |
 
+You can also call a measure on any list of genomes, for instance the final population of a run:
+
+```python
+from carmelolg.galib.metrics import positional_diversity
+
+genomes = [individual.genome for individual in result.population]
+positional_diversity(genomes)    # 0.04: almost every position carries the same gene
+len(set(genomes)) / len(genomes) # 0.84: but most genomes still differ by a few genes
+```
+
+Low diversity with a flat best fitness is the sign of premature convergence: raise the mutation rate or lower the
+selection pressure (a smaller `Tournament`).
+
 A measure is any function `(genomes) -> float | None`:
 
 ```python
@@ -117,11 +163,47 @@ GeneticAlgorithm(problem, diversity=lambda genomes: len(set(genomes)) / len(geno
 
 ## Plotting
 
-With matplotlib installed (`pip install "carmelolg-galib[plot]"`):
+`plot_history` draws the best and mean fitness (top) and the diversity (bottom) of a finished run. It needs
+matplotlib: `pip install "carmelolg-galib[plot]"`.
 
 ```python
 from carmelolg.galib.plot import plot_history
 
 result = GeneticAlgorithm(problem).run()
-plot_history(result)  # best and mean fitness, diversity
+plot_history(result)
 ```
+
+It works with any problem, since it only reads `result.history`. By default it opens a window and waits until you
+close it. To keep the figure instead, pass `show=False`: the function returns the matplotlib `Figure`.
+
+```python
+figure = plot_history(result, show=False)
+figure.savefig("history.png", dpi=150)
+```
+
+??? note "No window appears"
+    `plot_history` needs an interactive matplotlib backend. Check `matplotlib.get_backend()`: `agg` cannot open
+    windows (servers, some IDE modes). Save the figure with `show=False`, or pick a backend before plotting,
+    for example `matplotlib.use("MacOSX")` on macOS.
+
+    Also check that matplotlib is installed in the **same Python** that runs your script (`sys.executable`).
+
+### Your own plots
+
+For anything else, plot the history yourself. This compares the best fitness of several seeds:
+
+```python
+import matplotlib.pyplot as plt
+
+for seed in range(5):
+    result = GeneticAlgorithm(problem, seed=seed).run()
+    plt.plot([s.best_fitness for s in result.history], label=f"seed {seed}")
+
+plt.xlabel("generation")
+plt.ylabel("best fitness")
+plt.legend()
+plt.show()
+```
+
+Use `s.evaluations` on the x axis instead of the generation to compare settings with different population sizes
+fairly.
