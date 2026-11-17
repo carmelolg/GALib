@@ -1,0 +1,23 @@
+# Opens and updates a "release PR" from the Conventional Commits on main.
+# Merging that PR bumps the version (pyproject.toml, __version__), updates CHANGELOG.md,
+# creates the git tag and the GitHub release. Nothing is published to PyPI.
+# Prerequisite, once: repository Settings > Actions > General > Workflow permissions >
+# enable "Allow GitHub Actions to create and approve pull requests".
+name: Release Please
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
