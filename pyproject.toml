@@ -1,0 +1,82 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# Distribution name (what you `pip install`). The import name is `carmelolg.galib`:
+# a top-level package called `io` is impossible, it is already the standard library `io` module.
+name = "io.github.carmelolg.galib"
+version = "0.1.0"
+description = "A small, extensible library to build genetic algorithms."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "CARMELO LA GAMBA" }]
+requires-python = ">=3.10"
+dependencies = []
+keywords = ["genetic algorithm", "evolutionary computation", "optimization", "metaheuristics"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/carmelolg/GALib"
+Documentation = "https://carmelolg.github.io/GALib/"
+Changelog = "https://github.com/carmelolg/GALib/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+numpy = ["numpy>=1.24"]
+plot = ["matplotlib>=3.7"]
+docs = ["mkdocs-material>=9.5", "mkdocstrings[python]>=0.26"]
+dev = ["pytest>=8", "pytest-cov>=5", "mypy>=1.10", "ruff>=0.6", "numpy>=1.24", "matplotlib>=3.7"]
+
+# `carmelolg` is a PEP 420 namespace package (no __init__.py), `carmelolg.galib` is the library.
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["carmelolg.galib*"]
+namespaces = true
+
+[tool.setuptools.package-data]
+"carmelolg.galib" = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["carmelolg.galib"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 90
+exclude_also = ["if TYPE_CHECKING:", "raise NotImplementedError", "\\.\\.\\."]
+
+[tool.mypy]
+strict = true
+mypy_path = "src"
+explicit_package_bases = true
+files = ["src"]
+
+[[tool.mypy.overrides]]
+module = ["matplotlib", "matplotlib.*"]  # optional dependency, imported lazily by galib.plot
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]

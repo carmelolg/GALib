@@ -1,0 +1,63 @@
+{#-
+  GALib footer. Replaces Material's partials/footer.html (theme.custom_dir: docs/overrides).
+  The site footer: brand, documentation links, project links and the copyright bar. Previous / next page links
+  are not here but at the end of the article (partials/pager.html, included by partials/content.html).
+  Links are written with the `url` filter so that they work from every page, and with `use_directory_urls`.
+-#}
+<footer class="md-footer">
+  <div class="galib-footer">
+    <div class="galib-footer__inner">
+      <div class="galib-footer__grid">
+
+        <div class="galib-footer__brand">
+          <a class="galib-footer__logo" href="{{ nav.homepage.url | default('.', true) | url }}">{{ config.site_name }}</a>
+          <p class="galib-footer__tagline">{{ config.site_description }}</p>
+          <p class="galib-footer__license">
+            <a href="{{ 'license/' | url }}">Apache License 2.0</a>
+          </p>
+          {% if config.extra.social %}
+            <div class="galib-footer__social">
+              {% for social in config.extra.social %}
+                <a href="{{ social.link }}" target="_blank" rel="noopener" title="{{ social.name }}" aria-label="{{ social.name }}">
+                  {% include ".icons/" ~ social.icon ~ ".svg" %}
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="galib-footer__section">
+          <p class="galib-footer__title">Documentation</p>
+          <nav class="galib-footer__nav" aria-label="Documentation">
+            <a href="{{ 'getting-started/' | url }}">Quick start</a>
+            <a href="{{ 'concepts/' | url }}">Concepts</a>
+            <a href="{{ 'guide/problem/' | url }}">User guide</a>
+            <a href="{{ 'examples/' | url }}">Examples</a>
+            <a href="{{ 'reference/' | url }}">API reference</a>
+          </nav>
+        </div>
+
+        <div class="galib-footer__section">
+          <p class="galib-footer__title">Project</p>
+          <nav class="galib-footer__nav" aria-label="Project">
+            <a href="{{ config.repo_url }}" target="_blank" rel="noopener">Source code</a>
+            <a href="{{ config.repo_url }}/issues" target="_blank" rel="noopener">Report an issue</a>
+            <a href="{{ 'changelog/' | url }}">Changelog</a>
+            <a href="{{ 'license/' | url }}">License</a>
+          </nav>
+        </div>
+
+      </div>
+
+      <div class="galib-footer__bottom">
+        <span>{{ config.copyright }}</span>
+        <span>
+          Built with
+          <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
+          and
+          <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">Material</a>
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>

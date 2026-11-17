@@ -1,0 +1,1274 @@
+/* GALib documentation theme, on top of MkDocs Material.
+   Surfaces, borders and the sectioned sidebar follow the "GitHub docs" look of the JCAL documentation;
+   the accent is GALib's own teal, shared with the landing page.
+   Sections: 1 tokens, 2 typography, 3 header, 4 sidebars, 5 content, 6 landing page, 7 API reference, 8 small screens. */
+
+/* ------------------------------------------------------------------ 1. tokens */
+
+:root,
+[data-md-color-scheme="default"] {
+  --md-default-bg-color: #ffffff;
+  --md-default-fg-color: #24292f;
+  --md-default-fg-color--light: #57606a;
+  --md-default-fg-color--lighter: #8c959f;
+  --md-default-fg-color--lightest: #d0d7de; /* used by Material for borders */
+  --md-typeset-color: #24292f;
+
+  /* accent: change these four lines to retheme the whole site (JCAL uses blue: #0969da / #0550ae) */
+  --md-primary-fg-color: #0f766e;
+  --md-primary-fg-color--light: #14b8a6;
+  --md-primary-fg-color--dark: #0a4f49;
+  --md-typeset-a-color: #0b6b63;
+  --md-accent-fg-color: #0a5a53;
+  --md-accent-fg-color--transparent: rgba(15, 118, 110, 0.1);
+  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color--light: rgba(255, 255, 255, 0.78);
+
+  --md-code-bg-color: #f6f8fa;
+  --md-code-fg-color: #24292f;
+  --md-code-hl-color: rgba(15, 118, 110, 0.12);
+
+  --md-footer-bg-color: transparent;
+  --md-footer-bg-color--dark: transparent;
+  --md-footer-fg-color: #24292f;
+  --md-footer-fg-color--light: #57606a;
+  --md-footer-fg-color--lighter: #8c959f;
+
+  --galib-header-bg: #ffffff;
+  --galib-sidebar-bg: #f6f8fa;
+  --galib-sidebar-text: #57606a;
+  --galib-sidebar-section: #656d76;
+  --galib-hover-bg: rgba(175, 184, 193, 0.2);
+  --galib-active-bg: rgba(15, 118, 110, 0.09);
+
+  --galib-title: #1b1f24;
+  --galib-surface: #f6f8fa;
+  --galib-border: #d0d7de;
+  --galib-glow: rgba(20, 184, 166, 0.22);
+  --galib-grad-a: #0f766e;
+  --galib-grad-b: #d9480f;
+  --galib-radius: 0.6rem;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: #0d1117;
+  --md-default-bg-color--light: rgba(13, 17, 23, 0.54);
+  --md-default-bg-color--lighter: rgba(13, 17, 23, 0.26);
+  --md-default-bg-color--lightest: rgba(13, 17, 23, 0.07);
+  --md-default-fg-color: #e6edf3;
+  --md-default-fg-color--light: #8d96a0;
+  --md-default-fg-color--lighter: #656d76;
+  --md-default-fg-color--lightest: #30363d;
+  --md-typeset-color: #e6edf3;
+
+  --md-primary-fg-color: #0f766e;
+  --md-primary-fg-color--light: #2dd4bf;
+  --md-primary-fg-color--dark: #0a4f49;
+  --md-typeset-a-color: #2dd4bf;
+  --md-accent-fg-color: #5eead4;
+  --md-accent-fg-color--transparent: rgba(94, 234, 212, 0.12);
+
+  --md-code-bg-color: #161b22;
+  --md-code-fg-color: #e6edf3;
+  --md-code-hl-color: rgba(45, 212, 191, 0.16);
+
+  --md-footer-fg-color: #e6edf3;
+  --md-footer-fg-color--light: #8d96a0;
+  --md-footer-fg-color--lighter: #656d76;
+
+  --galib-header-bg: #0d1117;
+  --galib-sidebar-bg: #0d1117;
+  --galib-sidebar-text: #8b949e;
+  --galib-sidebar-section: #7d8590; /* JCAL uses #484f58, too faint to read */
+  --galib-hover-bg: rgba(255, 255, 255, 0.06);
+  --galib-active-bg: rgba(45, 212, 191, 0.12);
+
+  --galib-title: #f3f8f9;
+  --galib-surface: #161b22;
+  --galib-border: #30363d;
+  --galib-glow: rgba(45, 212, 191, 0.16);
+  --galib-grad-a: #2dd4bf;
+  --galib-grad-b: #fb923c;
+}
+
+/* ------------------------------------------------------------- 2. typography */
+
+:root {
+  /* system fonts: nothing to download, native look on every platform */
+  --md-text-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --md-code-font: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+
+.md-typeset {
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+  color: var(--galib-title); /* full contrast: Material's slate text colour is semi-transparent */
+}
+
+.md-typeset h1 {
+  font-size: 2.1em;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.md-typeset h2 {
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-top: 2.2em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-typeset h3 {
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.md-typeset strong {
+  color: var(--galib-title);
+}
+
+.md-typeset a:not(.md-button):not(.headerlink) {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--md-typeset-a-color) 40%, transparent);
+  text-underline-offset: 0.18em;
+}
+
+.md-typeset a:not(.md-button):not(.headerlink):hover {
+  text-decoration-color: currentColor;
+}
+
+/* ------------------------------------------------------------------ 3. header */
+
+.md-header {
+  background: var(--galib-header-bg);
+  color: var(--md-default-fg-color);
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  box-shadow: none;
+}
+
+.md-header[data-md-state="shadow"] {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+.md-header__inner {
+  padding: 0 0.8rem 0 0.6rem;
+}
+
+.md-header__title {
+  order: 2;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* order: logo, site name (takes the free space), search, theme switch, repository */
+.md-header__button[for="__search"],
+.md-search {
+  order: 3;
+}
+
+.md-header__option {
+  order: 4;
+}
+
+.md-header__source {
+  order: 5;
+}
+
+@media screen and (min-width: 60em) {
+  .md-search__inner {
+    width: 17rem;
+  }
+}
+
+/* the logo has one SVG per background (assets/logo-light|dark|teal.svg); an image on a pseudo-element picks it by theme */
+.md-header__button.md-logo img {
+  display: none;
+}
+
+.md-header__button.md-logo::before {
+  content: "";
+  display: block;
+  width: 1.7rem;
+  height: 1.7rem;
+  background: url("../assets/logo-light.svg") center / contain no-repeat;
+}
+
+[data-md-color-scheme="slate"] .md-header__button.md-logo::before {
+  background-image: url("../assets/logo-dark.svg");
+}
+
+/* search: a bordered field, like the JCAL header */
+.md-search__form {
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.4rem;
+  box-shadow: none;
+}
+
+.md-search__form:hover {
+  background: var(--galib-surface);
+}
+
+.md-search__input,
+.md-search__input + .md-search__icon,
+.md-search__icon {
+  color: var(--md-default-fg-color);
+}
+
+.md-search__input::placeholder {
+  color: var(--md-default-fg-color--light);
+}
+
+/* theme switch and repository link: square icon buttons with a thin border */
+.md-header__option .md-header__button,
+.md-header__source .md-source {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.4rem;
+  transition: background-color 0.12s, border-color 0.12s;
+}
+
+.md-header__option .md-header__button {
+  padding: 0.38rem;
+  margin: 0 0.15rem;
+}
+
+.md-header__option .md-header__button:hover,
+.md-header__source .md-source:hover {
+  background: var(--galib-hover-bg);
+  border-color: var(--md-default-fg-color--lighter);
+  opacity: 1;
+}
+
+/* repository link: same square as the theme switch, icon centred (Material gives the icon a 0.6rem
+   margin meant for its wide button, which pushed it down and to the right) */
+[dir="ltr"] .md-header__source {
+  width: auto;
+  margin-left: 0.3rem;
+}
+
+.md-header__source .md-source {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 2.05rem;
+  height: 2.05rem;
+}
+
+.md-header__source .md-source__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+
+.md-header__source .md-source__icon svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin: 0;
+}
+
+.md-header__source .md-source__repository {
+  display: none;
+}
+
+/* ----------------------------------------------------------------- 4. sidebars */
+
+@media screen and (min-width: 76.25em) {
+  /* full-width layout: sidebar at the left edge, table of contents at the right edge,
+     the text column in between (the standalone landing page is wider, see below) */
+  .md-grid {
+    max-width: none;
+  }
+
+  /* The primary sidebar is FIXED: it never shrinks or slides when the footer comes into view, and the footer
+     only spans the rest of the page (as in the JCAL docs). Material's default is a sticky box of height 0 whose
+     script shortens the navigation list near the footer; combined with a fixed panel height it left the list
+     scrolled out of sight. */
+  .md-sidebar--primary:not([hidden]) {
+    position: fixed;
+    top: 54px; /* fallback: Material's script sets the exact header height inline */
+    bottom: 0;
+    left: 0;
+    width: 16.5rem;
+    height: auto; /* Material sets 0 here for its sticky mechanics */
+    align-self: auto; /* Material's `flex-start` makes a fixed flex child ignore top/bottom and take its content height */
+    z-index: 3; /* below the header (4) */
+    padding: 0;
+    background: var(--galib-sidebar-bg);
+    border-right: 1px solid var(--md-default-fg-color--lightest);
+  }
+
+  .md-sidebar--primary .md-sidebar__scrollwrap {
+    box-sizing: border-box;
+    height: 100% !important; /* the script sets an inline height that shrinks near the footer */
+    padding: 0.5rem 0 2rem;
+    scrollbar-width: thin;
+  }
+
+  /* room for the fixed sidebar, in the content area and under the footer */
+  .md-main__inner:has(> .md-sidebar--primary:not([hidden])) {
+    padding-left: 16.5rem;
+  }
+
+  body:has(.md-sidebar--primary:not([hidden])) .md-footer {
+    margin-left: 16.5rem;
+  }
+
+  .md-sidebar--secondary {
+    width: 13.5rem;
+  }
+
+  /* `.md-main` raises the specificity above Material's own `[dir=ltr] .md-content__inner` margins */
+  .md-main .md-content__inner {
+    box-sizing: border-box;
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .md-main .md-content__inner:has(.galib-hero) {
+    max-width: 64rem;
+  }
+
+  /* the site name above the sidebar sections is redundant: the header already shows it */
+  .md-nav--primary > .md-nav__title {
+    display: none;
+  }
+}
+
+/* primary navigation: labelled sections with a rule between them, like JCAL */
+.md-nav--primary .md-nav__list {
+  padding: 0;
+}
+
+.md-nav--primary .md-nav__item {
+  padding: 0;
+}
+
+.md-nav--primary .md-nav__link {
+  margin: 0;
+  padding: 0.22rem 0.9rem 0.22rem 1.25rem;
+  font-size: 0.68rem;
+  line-height: 1.5;
+  color: var(--galib-sidebar-text);
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background-color 0.12s, border-color 0.12s;
+}
+
+.md-nav--primary .md-nav__link:hover {
+  color: var(--md-default-fg-color);
+  background: var(--galib-hover-bg);
+}
+
+.md-nav--primary .md-nav__link--active,
+.md-nav--primary .md-nav__link--active:hover {
+  color: var(--md-typeset-a-color);
+  background: var(--galib-active-bg);
+  border-left-color: var(--md-typeset-a-color);
+  font-weight: 600;
+}
+
+.md-nav--primary .md-nav__item--section {
+  margin: 0;
+  padding: 0.35rem 0;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-nav--primary .md-nav__item--section:first-child {
+  border-top: 0;
+}
+
+.md-nav--primary .md-nav__item--section > .md-nav__link {
+  padding: 0.55rem 0.9rem 0.2rem 1rem;
+  font-size: 0.58rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--galib-sidebar-section);
+  border-left: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.md-nav--primary .md-nav__item--section > .md-nav {
+  margin: 0;
+}
+
+/* table of contents: a quiet rail with the current heading highlighted */
+.md-nav--secondary .md-nav__title {
+  padding: 0 0.7rem 0.3rem;
+  font-size: 0.58rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--galib-sidebar-section);
+  background: transparent;
+  box-shadow: none;
+}
+
+.md-nav--secondary .md-nav__link {
+  margin: 0;
+  padding: 0.18rem 0.7rem;
+  font-size: 0.64rem;
+  line-height: 1.5;
+  border-left: 2px solid var(--md-default-fg-color--lightest);
+  transition: color 0.12s, border-color 0.12s;
+}
+
+.md-nav--secondary .md-nav__link--active {
+  color: var(--md-typeset-a-color);
+  border-left-color: var(--md-typeset-a-color);
+  font-weight: 600;
+}
+
+/* breadcrumbs */
+.md-path {
+  font-size: 0.66rem;
+}
+
+/* footer (template: docs/overrides/partials/footer.html): brand, links and copyright bar */
+.md-footer {
+  margin-top: 3rem;
+  background: var(--galib-surface);
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+  color: var(--md-default-fg-color);
+}
+
+.galib-footer__inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 1.2rem;
+}
+
+.galib-footer__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.galib-footer__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.galib-footer__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--galib-title);
+}
+
+.galib-footer__logo::before {
+  content: "";
+  width: 1.5rem;
+  height: 1.5rem;
+  background: url("../assets/logo-light.svg") center / contain no-repeat;
+}
+
+[data-md-color-scheme="slate"] .galib-footer__logo::before {
+  background-image: url("../assets/logo-dark.svg");
+}
+
+.md-footer .galib-footer__logo:hover {
+  color: var(--md-typeset-a-color);
+}
+
+.galib-footer__tagline {
+  max-width: 22rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.55;
+  color: var(--md-default-fg-color--light);
+}
+
+.galib-footer__license {
+  margin: 0.4rem 0 0;
+  font-size: 0.68rem;
+}
+
+.galib-footer__license a {
+  color: var(--md-default-fg-color--light);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.galib-footer__social {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+
+.galib-footer__social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  color: var(--md-default-fg-color--light);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.4rem;
+  transition: color 0.12s, border-color 0.12s, background-color 0.12s;
+}
+
+.galib-footer__social a:hover {
+  color: var(--md-typeset-a-color);
+  border-color: var(--md-typeset-a-color);
+  background: var(--md-default-bg-color);
+}
+
+.galib-footer__social svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentcolor;
+}
+
+.galib-footer__title {
+  margin: 0 0 0.55rem;
+  font-size: 0.58rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--galib-sidebar-section);
+}
+
+.galib-footer__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.galib-footer__nav a {
+  width: fit-content;
+  font-size: 0.72rem;
+  color: var(--md-default-fg-color--light);
+  transition: color 0.12s;
+}
+
+.galib-footer__nav a:hover,
+.galib-footer__license a:hover {
+  color: var(--md-typeset-a-color);
+  text-decoration: underline;
+}
+
+.galib-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem 1.5rem;
+  margin-top: 1.7rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+  font-size: 0.66rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.galib-footer__bottom a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.galib-footer__bottom a:hover {
+  color: var(--md-typeset-a-color);
+}
+
+@media screen and (max-width: 48em) {
+  .galib-footer__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .galib-footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ------------------------------------------------------------------ 5. content */
+
+/* code blocks */
+.md-typeset pre > code {
+  border-radius: 0.5rem;
+}
+
+.md-typeset code {
+  border-radius: 0.3rem;
+  word-break: normal;
+}
+
+.md-typeset .highlight {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.md-typeset .highlight pre {
+  margin: 0;
+}
+
+.md-typeset .highlight pre > code {
+  line-height: 1.6;
+  font-size: 0.78em;
+}
+
+.md-typeset .tabbed-set {
+  border-radius: 0.5rem;
+}
+
+/* a code block inside a tab is not glued to the tab labels, and has room to breathe */
+.md-typeset .tabbed-set .tabbed-content .tabbed-block > .highlight:first-child {
+  margin-top: 1rem;
+}
+
+.md-typeset .tabbed-set .tabbed-content .tabbed-block > .highlight:last-child {
+  margin-bottom: 0.3rem;
+}
+
+/* a little more padding in every code block: one-line boxes (commands) were tight around the copy button */
+.md-typeset .highlight pre > code {
+  padding: 0.95em 1.3em;
+}
+
+/* admonitions */
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 0.5rem;
+  border-width: 0;
+  border-left-width: 0.2rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 0 0 1px var(--md-default-fg-color--lightest);
+}
+
+/* tables: roomy, readable, scroll instead of squeezing */
+.md-typeset table:not([class]) {
+  font-size: 0.76rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.md-typeset table:not([class]) th {
+  background: var(--galib-surface);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.md-typeset table:not([class]) tr:hover td {
+  background: var(--galib-surface);
+}
+
+.md-typeset table:not([class]) td,
+.md-typeset table:not([class]) th {
+  padding: 0.65em 1em;
+}
+
+/* buttons */
+.md-typeset .md-button {
+  border-radius: 0.5rem;
+  font-weight: 600;
+  padding: 0.55em 1.3em;
+  transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s, color 0.15s;
+}
+
+.md-typeset .md-button:hover {
+  transform: translateY(-1px);
+}
+
+.md-typeset .md-button--primary {
+  background: linear-gradient(135deg, #0f766e, #0d9488);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 14px var(--galib-glow);
+}
+
+.md-typeset .md-button--primary:hover {
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  color: #fff;
+  box-shadow: 0 6px 18px var(--galib-glow);
+}
+
+/* cards */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid > .card {
+  border-radius: var(--galib-radius);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  background: var(--md-default-bg-color);
+  transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+}
+
+.md-typeset .grid.cards > ul > li:hover {
+  transform: translateY(-3px);
+  border-color: var(--md-typeset-a-color);
+  box-shadow: 0 10px 28px var(--galib-glow);
+}
+
+.md-typeset .grid.cards > ul > li > hr {
+  margin: 0.6em 0;
+}
+
+.md-typeset .grid.cards .twemoji {
+  color: var(--md-typeset-a-color);
+}
+
+/* vertical rhythm: every box (code, note, tabs, table, diagram) has the same space above and below, and two
+   neighbouring boxes keep that space between them (the margins of siblings collapse) instead of touching.
+   Code blocks had no margin of their own, so a block right after another one stuck to it. */
+.md-typeset .highlight,
+.md-typeset .admonition,
+.md-typeset details,
+.md-typeset .tabbed-set,
+.md-typeset .md-typeset__scrollwrap,
+.md-typeset .mermaid {
+  margin-top: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+
+/* inside another box the space is smaller */
+.md-typeset .admonition .highlight,
+.md-typeset details .highlight,
+.md-typeset .admonition .md-typeset__scrollwrap,
+.md-typeset details .md-typeset__scrollwrap {
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+/* previous / next page (template: docs/overrides/partials/pager.html): plain text at the end of the article,
+   no boxes, in the width of the text */
+.galib-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-typeset .galib-pager a.galib-pager__link:not(.md-button):not(.headerlink) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  max-width: 48%;
+  text-decoration: none;
+}
+
+.md-typeset .galib-pager a.galib-pager__link--next:not(.md-button):not(.headerlink) {
+  margin-left: auto;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.galib-pager__label {
+  font-size: 0.6rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--galib-sidebar-section);
+}
+
+.galib-pager__link--prev .galib-pager__label::before {
+  content: "\2190\00a0";
+}
+
+.galib-pager__link--next .galib-pager__label::after {
+  content: "\00a0\2192";
+}
+
+.galib-pager__title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--md-typeset-a-color);
+}
+
+.galib-pager__link:hover .galib-pager__title {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+@media screen and (max-width: 36em) {
+  .galib-pager {
+    flex-direction: column;
+  }
+
+  .md-typeset .galib-pager a.galib-pager__link:not(.md-button):not(.headerlink) {
+    max-width: none;
+  }
+
+  .md-typeset .galib-pager a.galib-pager__link--next:not(.md-button):not(.headerlink) {
+    margin-left: 0;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+/* keyboard focus must be visible */
+:focus-visible {
+  outline: 2px solid var(--md-typeset-a-color);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------- 6. landing page */
+
+.galib-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 2.5rem;
+  align-items: center;
+  padding: 1.8rem 0 0.6rem;
+}
+
+.galib-hero__text > p:first-child {
+  margin-top: 0;
+}
+
+.galib-eyebrow {
+  display: inline-block;
+  padding: 0.25em 0.9em;
+  border-radius: 99px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--md-typeset-a-color);
+  background: var(--md-accent-fg-color--transparent);
+  background: color-mix(in srgb, var(--md-typeset-a-color) 12%, transparent);
+  border: 1px solid var(--galib-border);
+}
+
+.md-typeset .galib-hero h1 {
+  margin: 0.5rem 0 0.7rem;
+  font-size: clamp(2.1rem, 4.6vw, 3.2rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+/* the permalink pilcrow is invisible but would wrap onto a ghost third line */
+.galib-hero h1 .headerlink {
+  display: none;
+}
+
+.galib-grad {
+  background: linear-gradient(100deg, var(--galib-grad-a), var(--galib-grad-b));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  white-space: nowrap;
+}
+
+.galib-lead {
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--md-default-fg-color--light);
+  max-width: 34rem;
+}
+
+.galib-install {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.4rem 0 0;
+  padding: 0.5rem 0.9rem;
+  border-radius: 0.55rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  background: var(--md-code-bg-color);
+  font-family: var(--md-code-font);
+  font-size: 0.72rem;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.galib-install span {
+  color: var(--md-default-fg-color--light);
+  user-select: none;
+}
+
+/* the terminal: lines appear one after the other */
+.galib-terminal {
+  border-radius: 0.9rem;
+  background: #0a1216;
+  color: #d3e3e6;
+  border: 1px solid rgba(45, 212, 191, 0.22);
+  box-shadow: 0 18px 50px rgba(8, 40, 38, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  min-width: 0;
+}
+
+.galib-terminal__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0.85rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.galib-terminal__bar i {
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+
+.galib-terminal__bar i:nth-child(2) {
+  background: #febc2e;
+}
+
+.galib-terminal__bar i:nth-child(3) {
+  background: #28c840;
+}
+
+.galib-terminal__bar b {
+  margin-left: 0.5rem;
+  font: 600 0.64rem var(--md-text-font);
+  color: rgba(211, 227, 230, 0.55);
+}
+
+.galib-terminal .md-code__nav,
+.galib-terminal .md-clipboard {
+  display: none;
+}
+
+.galib-terminal .md-code__content {
+  display: block;
+}
+
+.md-typeset .galib-terminal pre > code {
+  display: block;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.md-typeset .galib-terminal pre {
+  margin: 0;
+  padding: 0.9rem 1rem 1.1rem;
+  background: transparent;
+  overflow-x: auto;
+  white-space: pre;
+  font-family: var(--md-code-font);
+  font-size: 0.66rem;
+  line-height: 1.65;
+  color: inherit;
+}
+
+.galib-terminal .l {
+  display: block;
+  opacity: 0;
+  animation: galib-line 0.45s ease-out forwards;
+  animation-delay: calc(var(--i) * 0.5s + 0.35s);
+}
+
+.galib-terminal .dim {
+  color: rgba(211, 227, 230, 0.45);
+}
+
+.galib-terminal .num {
+  color: #fbbf5c;
+}
+
+.galib-terminal .gene {
+  color: #5eead4;
+}
+
+.galib-terminal .ok {
+  color: #6ee7a0;
+  font-weight: 700;
+}
+
+@keyframes galib-line {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .galib-terminal .l {
+    animation: none;
+    opacity: 1;
+  }
+
+  .md-typeset .md-button:hover,
+  .md-typeset .grid.cards > ul > li:hover {
+    transform: none;
+  }
+}
+
+/* groups of four cards: four columns, then two, then one (never three plus an orphan) */
+.md-typeset .grid.cards.galib-four {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media screen and (min-width: 70em) {
+  .md-typeset .grid.cards.galib-four {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 36em) {
+  .md-typeset .grid.cards.galib-four {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* quick links under the install command (the landing page has no sidebar and no tab bar) */
+.galib-links {
+  margin: 0.9rem 0 0;
+  font-size: 0.74rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.galib-links p {
+  margin: 0;
+}
+
+/* the landing page is standalone: the teal header of the first design, white text, translucent controls.
+   Only on that page; every other page keeps the neutral header. */
+body:has(.galib-hero) .md-header {
+  background: linear-gradient(105deg, var(--md-primary-fg-color--dark) 0%, var(--md-primary-fg-color) 60%, #11897f 100%);
+  color: #fff;
+  border-bottom-color: transparent;
+}
+
+body:has(.galib-hero) .md-header__button.md-logo::before {
+  background-image: url("../assets/logo-teal.svg");
+}
+
+body:has(.galib-hero) .md-header__option .md-header__button,
+body:has(.galib-hero) .md-header__source .md-source {
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+body:has(.galib-hero) .md-header__option .md-header__button:hover,
+body:has(.galib-hero) .md-header__source .md-source:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* while the search is closed: translucent field; once it opens Material switches to the page colours */
+body:has(.galib-hero) [data-md-toggle="search"]:not(:checked) ~ .md-header .md-search__form {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+body:has(.galib-hero) [data-md-toggle="search"]:not(:checked) ~ .md-header .md-search__form:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+body:has(.galib-hero) [data-md-toggle="search"]:not(:checked) ~ .md-header .md-search__input,
+body:has(.galib-hero) [data-md-toggle="search"]:not(:checked) ~ .md-header .md-search__icon {
+  color: #fff;
+}
+
+body:has(.galib-hero) [data-md-toggle="search"]:not(:checked) ~ .md-header .md-search__input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* section headings on the landing page */
+.galib-section {
+  margin: 3rem 0 0.2rem;
+  text-align: center;
+}
+
+.md-typeset .galib-section h2 {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font-size: 1.55rem;
+}
+
+.galib-section p {
+  margin: 0.3rem auto 0;
+  max-width: 36rem;
+  color: var(--md-default-fg-color--light);
+}
+
+/* The three level cards: title, rule, description, code box and link line up across the row, as if the cards
+   were the columns of one table. With subgrid the five parts of each card share the rows of the whole grid;
+   without it, a flex column at least pushes the link to the bottom and lets the code boxes share the height. */
+.md-typeset .grid.cards.galib-levels > ul > li {
+  display: flex;
+  flex-direction: column;
+}
+
+.md-typeset .grid.cards.galib-levels > ul > li > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.md-typeset .grid.cards.galib-levels > ul > li > p:first-child {
+  font-size: 0.95rem;
+}
+
+.md-typeset .grid.cards.galib-levels > ul > li > hr {
+  margin: 0.6em 0;
+}
+
+.md-typeset .grid.cards.galib-levels > ul > li > p:nth-child(3) {
+  margin-bottom: 0.7rem; /* description */
+}
+
+.md-typeset .grid.cards.galib-levels > ul > li > .highlight {
+  flex: 1 1 auto;
+  margin-bottom: 0.7rem;
+}
+
+.md-typeset .grid.cards.galib-levels > ul > li > p:last-child {
+  margin-top: auto; /* the link sits at the bottom of every card */
+}
+
+.md-typeset .grid.cards.galib-levels .highlight code {
+  font-size: 0.7em;
+}
+
+/* the code boxes are stretched to share the row height: let the code area fill them, so its background
+   reaches the border instead of stopping after the last line */
+.md-typeset .grid.cards.galib-levels > ul > li > .highlight {
+  display: flex;
+}
+
+.md-typeset .grid.cards.galib-levels > ul > li > .highlight pre {
+  display: flex;
+  flex: 1;
+}
+
+.md-typeset .grid.cards.galib-levels > ul > li > .highlight pre > code {
+  flex: 1;
+}
+
+@supports (grid-template-rows: subgrid) {
+  .md-typeset .grid.cards.galib-levels > ul > li {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 5; /* title, rule, description, code, link */
+    row-gap: 0;
+  }
+
+  .md-typeset .grid.cards.galib-levels > ul > li > p:last-child {
+    margin-top: 0;
+  }
+}
+
+/* three cards in a row only where each has room for its code; below that, one column (never two plus an orphan) */
+@media screen and (max-width: 70em) {
+  .md-typeset .grid.cards.galib-levels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* the landing page has no table of contents: the permalink pilcrows next to its headings lead nowhere */
+.md-content__inner:has(.galib-hero) .headerlink {
+  display: none;
+}
+
+/* ------------------------------------------------------------ 7. API reference */
+
+.md-typeset .doc-heading {
+  font-weight: 700;
+}
+
+.md-typeset h2.doc-heading {
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-typeset .doc-heading code {
+  background: transparent;
+  padding: 0;
+  font-size: 1em;
+}
+
+.md-typeset .doc-signature {
+  padding: 0.7em 1em;
+  border-radius: 0.6rem;
+  background: var(--md-code-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  overflow-x: auto;
+}
+
+.md-typeset .doc-contents {
+  border-left: 2px solid var(--galib-border);
+  padding-left: 1.1rem;
+  margin-left: 0.2rem;
+}
+
+.md-typeset .doc-section-title {
+  font-weight: 700;
+}
+
+.md-typeset .doc-label {
+  border-radius: 99px;
+}
+
+.md-typeset details.quote > summary,
+.md-typeset details.example > summary {
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------- 8. small screens */
+
+@media screen and (max-width: 70em) {
+  .galib-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.6rem;
+  }
+
+  .galib-lead {
+    max-width: none;
+  }
+}
+
+@media screen and (max-width: 30em) {
+  .md-typeset .galib-hero h1 {
+    font-size: 2rem;
+  }
+
+  .galib-grad {
+    white-space: normal;
+  }
+
+  .galib-terminal pre {
+    font-size: 0.6rem;
+  }
+
+  .md-typeset .md-button {
+    width: 100%;
+    text-align: center;
+    margin: 0.25rem 0;
+  }
+
+  .md-typeset table:not([class]) td,
+  .md-typeset table:not([class]) th {
+    padding: 0.55em 0.75em;
+  }
+}
+
+/* printing: no animation, no chrome */
+@media print {
+  .galib-terminal .l {
+    animation: none;
+    opacity: 1;
+  }
+}
