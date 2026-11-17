@@ -1,5 +1,9 @@
 # GALib
 
+[![CI](https://github.com/carmelolg/GALib/actions/workflows/ci.yml/badge.svg)](https://github.com/carmelolg/GALib/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/carmelolg/GALib/graph/badge.svg)](https://codecov.io/gh/carmelolg/GALib)
+[![License: Apache 2.0](https://img.shields.io/github/license/carmelolg/GALib)](LICENSE)
+
 A small, extensible library to build genetic algorithms in Python 3.10+.
 Fully typed, no dependencies in the core, optional numpy acceleration.
 
@@ -7,11 +11,10 @@ Fully typed, no dependencies in the core, optional numpy acceleration.
 
 | | |
 |---|---|
-| Distribution name (`pip install`) | `io.github.carmelolg.galib` |
+| Distribution name (`pip install`) | `carmelolg-galib` |
 | Import name | `carmelolg.galib` |
 
-`io.github.carmelolg.galib` cannot be an import name: `io` is the standard library module, already loaded when
-Python starts. `carmelolg` is a [PEP 420](https://peps.python.org/pep-0420/) namespace package.
+`carmelolg` is a [PEP 420](https://peps.python.org/pep-0420/) namespace package.
 
 ## Quick start
 

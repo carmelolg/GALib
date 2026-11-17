@@ -117,7 +117,7 @@ GeneticAlgorithm(problem, diversity=lambda genomes: len(set(genomes)) / len(geno
 
 ## Plotting
 
-With matplotlib installed (`pip install "io.github.carmelolg.galib[plot]"`):
+With matplotlib installed (`pip install "carmelolg-galib[plot]"`):
 
 ```python
 from carmelolg.galib.plot import plot_history

@@ -7,7 +7,7 @@ how well an algorithm keeps exploring. In 10 dimensions a plain genetic algorith
 origin (best values between about 0.1 and 2 depending on the seed) rather than exactly on it; try other
 settings and seeds to see how exploration changes the result.
 
-Requires numpy:  pip install "io.github.carmelolg.galib[numpy]"
+Requires numpy:  pip install "carmelolg-galib[numpy]"
 """
 import numpy as np
 

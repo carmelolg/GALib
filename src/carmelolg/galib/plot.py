@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 CARMELO LA GAMBA
 # SPDX-License-Identifier: Apache-2.0
-"""Optional plotting. Requires matplotlib: ``pip install "io.github.carmelolg.galib[plot]"``."""
+"""Optional plotting. Requires matplotlib: ``pip install "carmelolg-galib[plot]"``."""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any

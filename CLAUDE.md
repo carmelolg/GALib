@@ -21,8 +21,8 @@ CI (`.github/workflows/`) runs the same checks on Python 3.10–3.14, plus a job
 - Product name **GALib** (docs, prose, repository `carmelolg/GALib`, Pages URL `https://carmelolg.github.io/GALib/`: a project
   site's path is the repository name, so the repository must be called exactly `GALib`). Code stays lowercase:
   import package `carmelolg.galib`, CSS classes `galib-*`.
-- Distribution name `io.github.carmelolg.galib`, import name `carmelolg.galib`. `io.*` cannot be an import name
-  (stdlib `io`). `carmelolg` is a PEP 420 namespace package: never add `src/carmelolg/__init__.py`.
+- Distribution name `carmelolg-galib` (PyPI), import name `carmelolg.galib`. `carmelolg` is a PEP 420 namespace
+  package: never add `src/carmelolg/__init__.py`.
 - Every source file starts with the SPDX copyright header (`SPDX-FileCopyrightText` / `SPDX-License-Identifier:
   Apache-2.0`); keep it on new files. `LICENSE` is the verbatim Apache-2.0 text, attribution goes in `NOTICE`.
 
@@ -77,4 +77,6 @@ MkDocs Material, sources in `docs/`, config in `mkdocs.yml`; the API reference i
   hand-written feature list of 0.1.0 live in `docs/changelog.md`, which includes `CHANGELOG.md`.
 - The version lives in `pyproject.toml` and in `src/carmelolg/galib/__init__.py` (the line marked
   `x-release-please-version`); release-please updates both, so do not bump them manually.
-- Nothing is published to PyPI.
+- Publishing to PyPI uses Trusted Publishing (no tokens): `.github/workflows/publish.yml`, environment `pypi`.
+  The release-please workflow starts it with `gh workflow run` after creating a release, because a release made
+  with the default `GITHUB_TOKEN` does not trigger `release: published` workflows.

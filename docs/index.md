@@ -21,7 +21,7 @@ and every behaviour can be replaced, from one parameter to the whole replacement
 [Get started](getting-started.md){ .md-button .md-button--primary }
 [How it works](concepts.md){ .md-button }
 
-<p class="galib-install"><span>$</span> pip install io.github.carmelolg.galib</p>
+<p class="galib-install"><span>$</span> pip install carmelolg-galib</p>
 
 <div class="galib-links" markdown>
 [User guide](guide/problem.md) · [Examples](examples.md) · [API reference](reference/index.md) · [Changelog](changelog.md)
@@ -163,23 +163,23 @@ and every behaviour can be replaced, from one parameter to the whole replacement
 === "Core"
 
     ```bash
-    pip install io.github.carmelolg.galib
+    pip install carmelolg-galib
     ```
 
 === "With numpy"
 
     ```bash
-    pip install "io.github.carmelolg.galib[numpy]"
+    pip install "carmelolg-galib[numpy]"
     ```
 
 === "With plots"
 
     ```bash
-    pip install "io.github.carmelolg.galib[plot]"
+    pip install "carmelolg-galib[plot]"
     ```
 
 !!! note "Distribution name and import name"
-    You install `io.github.carmelolg.galib` and import `carmelolg.galib`.
+    You install `carmelolg-galib` and import `carmelolg.galib`.
     A Python package cannot be called `io.*`: `io` is a standard library module.
 
 !!! info "Not on PyPI yet"

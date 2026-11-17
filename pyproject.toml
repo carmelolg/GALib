@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 # Distribution name (what you `pip install`). The import name is `carmelolg.galib`:
 # a top-level package called `io` is impossible, it is already the standard library `io` module.
-name = "io.github.carmelolg.galib"
+name = "carmelolg-galib"
 version = "0.1.0"
 description = "A small, extensible library to build genetic algorithms."
 readme = "README.md"

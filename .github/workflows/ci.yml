@@ -1,5 +1,5 @@
 # Tests, type checking, lint and documentation build on every push and pull request.
-# Nothing is published from this workflow.
+# Nothing is published from this workflow (coverage is uploaded to Codecov).
 name: CI
 
 on:
@@ -39,6 +39,13 @@ jobs:
         with:
           name: coverage-xml
           path: coverage.xml
+      - name: Upload coverage to Codecov
+        if: matrix.python-version == '3.13'
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
 
   test-minimal:
     # The core has no dependencies: make sure it works without numpy and matplotlib.

@@ -44,7 +44,7 @@ Every built-in operator and diversity measure accepts one-dimensional numpy arra
 Vectorised paths are used where they help (uniform and blend crossover, diversity), and every numpy random draw
 comes from a generator derived from the run's seed, so runs stay reproducible.
 
-Install the extra: `pip install "io.github.carmelolg.galib[numpy]"`.
+Install the extra: `pip install "carmelolg-galib[numpy]"`.
 
 ## What to expect
 
