@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.2.0...carmelolg-galib-v0.2.1) (2026-11-17)
+
+
+### Documentation
+
+* document results, metrics and plotting with examples ([535873a](https://github.com/carmelolg/GALib/commit/535873a5ab9f50d644bcafebeb2c6b190ec752b0))
+
 ## [0.2.0](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.1.0...carmelolg-galib-v0.2.0) (2026-11-17)
 
 
