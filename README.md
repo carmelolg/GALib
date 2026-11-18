@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/carmelolg/GALib/main/docs/assets/logo-dark.svg">
+    <img src="https://raw.githubusercontent.com/carmelolg/GALib/main/docs/assets/logo-light.svg" alt="GALib logo" width="96" height="96">
+  </picture>
+</p>
+
 # GALib
 
 [![CI](https://github.com/carmelolg/GALib/actions/workflows/ci.yml/badge.svg)](https://github.com/carmelolg/GALib/actions/workflows/ci.yml)
