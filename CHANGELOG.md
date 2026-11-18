@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.2.1...carmelolg-galib-v0.2.2) (2026-11-17)
+
+
+### Bug Fixes
+
+* **docs:** make the mobile drawer navigable and touch friendly ([#4](https://github.com/carmelolg/GALib/issues/4)) ([ce7e092](https://github.com/carmelolg/GALib/commit/ce7e0923aaf1f89011ae6aca6f1e1178a5c941f3))
+
 ## [0.2.1](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.2.0...carmelolg-galib-v0.2.1) (2026-11-17)
 
 
