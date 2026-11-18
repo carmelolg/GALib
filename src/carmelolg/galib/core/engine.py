@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 import math
+import os
 from collections.abc import Iterable, Sequence, Sized
-from concurrent.futures import Executor
+from concurrent.futures import Executor, ProcessPoolExecutor, ThreadPoolExecutor
+from dataclasses import replace
+from functools import partial
 from random import Random
-from typing import TYPE_CHECKING, Any, Generic
+from types import TracebackType
+from typing import TYPE_CHECKING, Any, Generic, Literal
 
 from ..metrics import DiversityMeasure, positional_diversity
 from ..operators.protocols import CrossoverOperator, MutationOperator, SelectionOperator
@@ -24,12 +28,18 @@ def _score(individual: Individual[Any]) -> float:
     return individual.score
 
 
+def _evaluate_chunk(problem: Problem[Any], genomes: Sequence[Any]) -> list[float]:
+    """Evaluate one chunk of genomes (module level, so it can be sent to worker processes)."""
+    return [float(value) for value in problem.fitness_batch(genomes)]
+
+
 class GeneticAlgorithm(Generic[G]):
     """The evolutionary loop.
 
     Three ways to customise it, from light to deep:
 
-    1. Parameters: ``population_size``, ``elite_size``, rates, ``stop``, ``callbacks``, ``seed``, ``executor``.
+    1. Parameters: ``population_size``, ``elite_size``, rates, ``stop``, ``callbacks``, ``seed``,
+       ``workers`` / ``executor``.
     2. Operators: pass ``selection=``, ``crossover=``, ``mutation=`` (see ``carmelolg.galib.operators``), or
        override ``crossover`` / ``mutate`` on your ``Problem``. Explicit arguments win over the Problem.
     3. Subclassing: ``step`` is built from ``reproduce`` and ``replace``, which use ``select``,
@@ -56,14 +66,30 @@ class GeneticAlgorithm(Generic[G]):
         callbacks: Iterable[Callback] = (),
         seed: int | None = None,
         executor: Executor | None = None,
+        history_genome_every: int = 1,
+        workers: int | None = None,
+        parallel: Literal["process", "thread"] = "process",
+        chunk_size: int | None = None,
         diversity: DiversityMeasure | None = positional_diversity,
     ) -> None:
         """
         :param mutation_rate: per-gene mutation probability; ``None`` means ``1 / genome length``.
         :param stop: extra stop conditions; the run also stops after ``max_generations``.
         :param seed: seed of the run's own ``random.Random``; same seed, same run.
-        :param executor: evaluate fitness with ``executor.map(problem.fitness, ...)`` (with a process
-            pool the Problem must be picklable). Without it the engine calls ``problem.fitness_batch``.
+        :param executor: evaluate fitness in parallel on your own ``concurrent.futures`` executor (you create
+            and close it; with a process pool the Problem must be picklable). The new genomes are split into
+            chunks, and every chunk is one task that calls ``problem.fitness_batch``.
+        :param history_genome_every: how often ``result.history`` keeps the best genome: ``1`` every generation
+            (default), ``N`` every N generations, ``0`` never. The other entries keep their statistics but
+            have ``best_genome=None``. Lower memory for long runs with big genomes; the run itself never reads
+            the history, callbacks and stop conditions always get the full stats, ``result.best`` is untouched.
+        :param workers: shortcut for parallel evaluation: the engine creates and manages a pool of this many
+            workers. Mutually exclusive with ``executor``. The pool lives until ``run`` ends (or ``close()``).
+        :param parallel: ``"process"`` (default, for CPU-bound fitness; the Problem must be picklable) or
+            ``"thread"`` (I/O-bound fitness, or numpy code that releases the GIL). Used with ``workers``.
+        :param chunk_size: genomes per task. ``None`` splits the batch evenly, one chunk per worker
+            (``os.cpu_count()`` workers when the executor's size is unknown); smaller chunks balance
+            uneven fitness costs better, larger ones cut the overhead of sending data to workers.
         :param diversity: how to measure diversity (see ``carmelolg.galib.metrics``); ``None`` disables
             the measure, which saves time on large populations.
         """
@@ -78,6 +104,16 @@ class GeneticAlgorithm(Generic[G]):
             raise ValueError("crossover_rate must be in [0, 1]")
         if mutation_rate is not None and not 0 <= mutation_rate <= 1:
             raise ValueError("mutation_rate must be in [0, 1]")
+        if history_genome_every < 0:
+            raise ValueError("history_genome_every must be >= 0")
+        if workers is not None and workers < 1:
+            raise ValueError("workers must be >= 1")
+        if workers is not None and executor is not None:
+            raise ValueError("pass either workers or executor, not both")
+        if parallel not in ("process", "thread"):
+            raise ValueError("parallel must be 'process' or 'thread'")
+        if chunk_size is not None and chunk_size < 1:
+            raise ValueError("chunk_size must be >= 1")
 
         self.problem = problem
         self.population_size = population_size
@@ -89,6 +125,11 @@ class GeneticAlgorithm(Generic[G]):
         self.callbacks: list[Callback] = list(callbacks)
         self.seed = seed
         self.executor = executor
+        self.history_genome_every = history_genome_every
+        self.workers = workers
+        self.parallel = parallel
+        self.chunk_size = chunk_size
+        self._pool: Executor | None = None  # created lazily when ``workers`` is set, owned by the engine
         self.diversity = diversity
 
         self._selection: SelectionOperator[G] = selection if selection is not None else Tournament(3)
@@ -127,14 +168,17 @@ class GeneticAlgorithm(Generic[G]):
 
         Calling ``run`` again restarts from scratch (with the same seed, the same run).
         """
-        self.initialize()
-        for callback in self.callbacks:
-            callback.on_start(self)
+        try:
+            self.initialize()
+            for callback in self.callbacks:
+                callback.on_start(self)
 
-        stopped_by = self._record_generation()
-        while stopped_by is None and self.generation < self.max_generations:
-            self.step()
             stopped_by = self._record_generation()
+            while stopped_by is None and self.generation < self.max_generations:
+                self.step()
+                stopped_by = self._record_generation()
+        finally:
+            self.close()
 
         result = Result(
             best=self.best,
@@ -147,6 +191,22 @@ class GeneticAlgorithm(Generic[G]):
         for callback in self.callbacks:
             callback.on_end(result, self)
         return result
+
+    def close(self) -> None:
+        """Shut down the worker pool created for ``workers``. ``run`` calls it; call it yourself (or use the
+        engine in a ``with`` block) after a manual ``initialize`` / ``step`` loop. Safe to call twice; a
+        user-supplied ``executor`` is never closed."""
+        if self._pool is not None:
+            self._pool.shutdown()
+            self._pool = None
+
+    def __enter__(self) -> GeneticAlgorithm[G]:
+        return self
+
+    def __exit__(
+        self, exc_type: type[BaseException] | None, exc: BaseException | None, tb: TracebackType | None
+    ) -> None:
+        self.close()
 
     def initialize(self) -> None:
         """Reset the run state and build the initial population (generation 0).
@@ -186,14 +246,15 @@ class GeneticAlgorithm(Generic[G]):
         return self.evaluate([self.problem.random_genome(self.rng) for _ in range(self.population_size)])
 
     def evaluate(self, genomes: Sequence[G]) -> list[Individual[G]]:
-        """Compute the fitness of new genomes: ``problem.fitness_batch``, or ``problem.fitness`` through
-        the ``executor`` when one was given."""
+        """Compute the fitness of new genomes: ``problem.fitness_batch`` on the whole batch, or, with
+        ``workers`` / ``executor``, on chunks of it in parallel (see ``evaluate_parallel``)."""
         if not genomes:
             return []
-        if self.executor is None:
+        executor = self._executor()
+        if executor is None:
             values = list(self.problem.fitness_batch(genomes))
         else:
-            values = list(self.executor.map(self.problem.fitness, genomes))
+            values = self.evaluate_parallel(executor, genomes)
         if len(values) != len(genomes):
             raise ValueError(f"fitness_batch returned {len(values)} values for {len(genomes)} genomes")
         self.evaluations += len(genomes)
@@ -205,6 +266,26 @@ class GeneticAlgorithm(Generic[G]):
                 raise ValueError(f"fitness must be a finite number, got {value!r} for genome {genome!r}")
             individuals.append(Individual(genome, fitness, sign * fitness))
         return individuals
+
+    def _executor(self) -> Executor | None:
+        if self.executor is not None:
+            return self.executor
+        if self.workers is None:
+            return None
+        if self._pool is None:
+            pool_class = ProcessPoolExecutor if self.parallel == "process" else ThreadPoolExecutor
+            self._pool = pool_class(max_workers=self.workers)
+        return self._pool
+
+    def evaluate_parallel(self, executor: Executor, genomes: Sequence[G]) -> list[float]:
+        """Split ``genomes`` into chunks, evaluate each with ``problem.fitness_batch`` on ``executor`` and
+        return the values in order. Override to change how work is divided."""
+        size = self.chunk_size or math.ceil(len(genomes) / (self.workers or os.cpu_count() or 1))
+        chunks = [genomes[i : i + size] for i in range(0, len(genomes), size)]
+        values: list[float] = []
+        for chunk_values in executor.map(partial(_evaluate_chunk, self.problem), chunks):
+            values.extend(chunk_values)
+        return values
 
     def select(self, population: Sequence[Individual[G]], count: int) -> list[Individual[G]]:
         """Pick ``count`` parents."""
@@ -267,13 +348,20 @@ class GeneticAlgorithm(Generic[G]):
     def _record_generation(self) -> str | None:
         """Store the stats of the current generation, notify callbacks, check stop conditions."""
         stats = self.collect_stats()
-        self.history.append(stats)
+        self.history.append(self._for_history(stats))
         for callback in self.callbacks:
             callback.on_generation(stats, self)
         for condition in self.stop:
             if condition.should_stop(stats, self):
                 return type(condition).__name__
         return None
+
+    def _for_history(self, stats: GenerationStats[G]) -> GenerationStats[G]:
+        """The entry stored in ``history``: without the genome when ``history_genome_every`` skips it."""
+        every = self.history_genome_every
+        if every == 1 or (every > 0 and stats.generation % every == 0):
+            return stats
+        return replace(stats, best_genome=None)
 
     def _resolve_mutation_rate(self) -> float:
         if self.mutation_rate is not None:

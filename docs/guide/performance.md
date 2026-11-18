@@ -5,19 +5,26 @@ it up.
 
 ## 1. Parallel evaluation
 
-Pass any `concurrent.futures` executor; the engine then calls `problem.fitness` through `executor.map`:
+Ask the engine for workers: the new genomes of each generation are split into **chunks**, one per worker,
+and each chunk is evaluated by `problem.fitness_batch` (which calls `fitness` for every genome by default).
 
 ```python
-from concurrent.futures import ProcessPoolExecutor
-
-with ProcessPoolExecutor() as pool:
-    result = GeneticAlgorithm(problem, executor=pool).run()
+result = GeneticAlgorithm(problem, workers=8).run()                     # process pool, managed by the engine
+result = GeneticAlgorithm(problem, workers=8, parallel="thread").run()  # thread pool
+result = GeneticAlgorithm(problem, workers=8, chunk_size=4).run()       # smaller chunks, better balance
 ```
 
-- Use a **process** pool for CPU-bound fitness functions (simulations, heavy computations); the `Problem` must
-  then be picklable.
-- Use a **thread** pool for fitness functions that wait on I/O (external services, files).
-- Results do not depend on the executor: the same seed gives the same run.
+- `parallel="process"` (default) suits CPU-bound fitness functions (simulations, rendering, heavy computations).
+  The `Problem` must be picklable, and on macOS and Windows the script needs the usual
+  `if __name__ == "__main__":` guard.
+- `parallel="thread"` suits fitness functions that wait on I/O, or numpy code that releases the GIL.
+- `chunk_size=None` makes one chunk per worker. Use a smaller value when fitness costs are uneven, a larger one
+  when sending genomes to the workers is the bottleneck.
+- The engine creates the pool lazily and closes it when `run()` ends. After a manual `initialize()` / `step()`
+  loop, call `engine.close()` or use the engine in a `with` block.
+- To use your own pool, pass `executor=pool` instead of `workers` (you close it; `workers` and `executor` are
+  mutually exclusive). Chunking works the same way.
+- Results do not depend on the number of workers: the same seed gives the same run.
 
 ## 2. Vectorised fitness
 
@@ -68,6 +75,8 @@ python benchmarks/numpy_vs_python.py 500 500 30   # genome length, population, g
 
 - **Mutation is cheap by design**: mutated positions are drawn with geometric jumps, so the cost depends on the
   number of mutations (about one per child by default), not on the genome length.
+- **Long runs with big genomes**: `result.history` keeps the best genome of every generation. Set
+  `history_genome_every=1000` (or `0`) so the memory does not grow with the number of generations.
 - **Skip the diversity measure** with `diversity=None` if you do not need it: it scans the whole population at
   every generation.
 - **Elites are never evaluated twice**: `result.evaluations` tells how many fitness calls a run made.

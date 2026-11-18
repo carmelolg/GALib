@@ -53,7 +53,8 @@ class Problem(ABC, Generic[G]):
         """Return the fitness of every genome, in order.
 
         Override it to evaluate the whole population at once, e.g. with numpy. The default calls
-        ``fitness`` for each genome. When the engine has an ``executor``, it calls ``fitness`` instead.
+        ``fitness`` for each genome. With ``workers`` or ``executor`` the engine calls it on chunks of the
+        batch, in parallel.
         """
         self.check_fitness_implemented()
         return [self.fitness(genome) for genome in genomes]

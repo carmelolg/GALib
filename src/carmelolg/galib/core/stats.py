@@ -17,7 +17,7 @@ class GenerationStats(Generic[G]):
     mean_fitness: float
     worst_fitness: float
     diversity: float | None  # see GeneticAlgorithm.measure_diversity; None if not measurable
-    best_genome: G
+    best_genome: G | None  # None in ``result.history`` for generations skipped by ``history_genome_every``
     evaluations: int  # fitness evaluations so far
 
 

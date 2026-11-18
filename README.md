@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/carmelolg/GALib/actions/workflows/ci.yml/badge.svg)](https://github.com/carmelolg/GALib/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/carmelolg/GALib/graph/badge.svg)](https://codecov.io/gh/carmelolg/GALib)
+[![PyPI](https://img.shields.io/pypi/v/carmelolg-galib)](https://pypi.org/project/carmelolg-galib/)
 [![License: Apache 2.0](https://img.shields.io/github/license/carmelolg/GALib)](LICENSE)
 
 A small, extensible library to build genetic algorithms in Python 3.10+.
@@ -50,7 +51,7 @@ print(result.best.genome)  # hello world
   (`BlendCrossover`, `GaussianMutation`); selection by `Tournament`, `Roulette`, `Rank`.
 - **Monitoring**: per-generation statistics and diversity, callbacks (`PrintProgress`), stop conditions
   (`TargetFitness`, `Stagnation`, `TimeLimit`), plots.
-- **Performance**: vectorised `fitness_batch`, numpy array genomes, parallel evaluation with any executor.
+- **Performance**: vectorised `fitness_batch`, numpy array genomes, parallel evaluation in chunks (`workers=N`, or any executor).
 - **Reproducible**: each run has its own seeded random generator.
 
 ## Development

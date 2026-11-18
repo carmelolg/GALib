@@ -16,7 +16,11 @@ GeneticAlgorithm(
     stop=[...],              # extra stop conditions
     callbacks=[...],         # hooks called during the run
     seed=None,               # same seed, same run
-    executor=None,           # concurrent.futures executor for parallel fitness
+    history_genome_every=1,  # keep the best genome in result.history every N generations (0 = never)
+    workers=None,            # parallel fitness: pool of this many workers managed by the engine
+    parallel="process",      # "process" or "thread" (used with workers)
+    chunk_size=None,         # genomes per task; None = one chunk per worker
+    executor=None,           # or your own concurrent.futures executor (instead of workers)
     diversity=positional_diversity,  # diversity measure, or None to skip it
 )
 ```
@@ -45,7 +49,7 @@ flowchart LR
 | Method                                    | Default behaviour                                                       |
 |-------------------------------------------|-------------------------------------------------------------------------|
 | `initial_population()`                    | `population_size` random genomes, evaluated                             |
-| `evaluate(genomes)`                       | `problem.fitness_batch`, or `problem.fitness` through the executor      |
+| `evaluate(genomes)`                       | `problem.fitness_batch`, on chunks in parallel with workers / executor  |
 | `select(population, count)`               | the selection operator                                                  |
 | `crossover(a, b)` / `mutate(genome)`      | the crossover and mutation operators                                    |
 | `reproduce(population)`                   | `population_size - elite_size` children                                 |

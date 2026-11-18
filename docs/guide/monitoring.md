@@ -12,10 +12,15 @@ After every generation, generation 0 included, the engine records a
 | `mean_fitness`  | average fitness of the population               |
 | `worst_fitness` | worst fitness of the population                 |
 | `diversity`     | the diversity measure, or `None`                |
-| `best_genome`   | genome of the best individual                   |
+| `best_genome`   | genome of the best individual (see below)       |
 | `evaluations`   | fitness evaluations so far                      |
 
 They are available in `result.history`, and passed to callbacks and stop conditions as the run goes.
+
+By default `result.history` keeps the best genome of every generation. With big genomes (images, large arrays) that
+adds up: a run of tens of thousands of generations can fill the memory. `history_genome_every=N` keeps the genome
+only every N generations (`0` never) and sets `best_genome=None` in the other entries. Statistics are never dropped,
+callbacks and stop conditions always receive the full stats, and `result.best` is not affected.
 
 ### Reading a run
 
