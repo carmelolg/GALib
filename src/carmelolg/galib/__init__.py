@@ -19,7 +19,7 @@ from .callbacks import Callback, PrintProgress
 from .core import GenerationStats, GeneticAlgorithm, Individual, Problem, Result
 from .termination import Stagnation, StopCondition, TargetFitness, TimeLimit
 
-__version__ = "0.2.2"  # x-release-please-version
+__version__ = "0.3.0"  # x-release-please-version
 
 __all__ = [
     "Callback",
