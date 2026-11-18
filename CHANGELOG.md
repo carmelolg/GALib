@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.1](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.3.0...carmelolg-galib-v0.3.1) (2026-11-18)
+
+
+### Documentation
+
+* add logo to README ([3e1350d](https://github.com/carmelolg/GALib/commit/3e1350d2232f240db4d0449bb913c5722ecf3bca))
+* put logo and name side by side in README ([122cdb6](https://github.com/carmelolg/GALib/commit/122cdb6ff76b71798f5d5a81a2f975cf2c9f674d))
+
 ## [0.3.0](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.2.2...carmelolg-galib-v0.3.0) (2026-11-18)
 
 
