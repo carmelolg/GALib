@@ -179,11 +179,7 @@ and every behaviour can be replaced, from one parameter to the whole replacement
     ```
 
 !!! note "Distribution name and import name"
-    You install `carmelolg-galib` and import `carmelolg.galib`.
-    A Python package cannot be called `io.*`: `io` is a standard library module.
-
-!!! info "Not on PyPI yet"
-    Until the first release, install from a local clone: `pip install -e ".[numpy,plot]"`.
+    You install `carmelolg-galib` ([PyPI](https://pypi.org/project/carmelolg-galib/)) and import `carmelolg.galib`.
 
 ## Thirty seconds example
 

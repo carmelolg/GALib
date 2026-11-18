@@ -12,3 +12,5 @@ coverage.xml
 htmlcov/
 .DS_Store
 .idea/
+examples/history.png
+*.pyc
