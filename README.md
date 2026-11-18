@@ -1,11 +1,16 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/carmelolg/GALib/main/docs/assets/logo-dark.svg">
-    <img src="https://raw.githubusercontent.com/carmelolg/GALib/main/docs/assets/logo-light.svg" alt="GALib logo" width="96" height="96">
-  </picture>
-</p>
-
-# GALib
+<table>
+  <tr>
+    <td valign="middle">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/carmelolg/GALib/main/docs/assets/logo-dark.svg">
+        <img src="https://raw.githubusercontent.com/carmelolg/GALib/main/docs/assets/logo-light.svg" alt="GALib logo" width="96" height="96">
+      </picture>
+    </td>
+    <td valign="middle">
+      <h1>GALib</h1>
+    </td>
+  </tr>
+</table>
 
 [![CI](https://github.com/carmelolg/GALib/actions/workflows/ci.yml/badge.svg)](https://github.com/carmelolg/GALib/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/carmelolg/GALib/graph/badge.svg)](https://codecov.io/gh/carmelolg/GALib)
