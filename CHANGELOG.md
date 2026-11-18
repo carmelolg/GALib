@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.2.2...carmelolg-galib-v0.3.0) (2026-11-18)
+
+
+### Features
+
+* **engine:** parallel fitness evaluation and thinned history ([db920e0](https://github.com/carmelolg/GALib/commit/db920e03a850eb8eefc00a355c7cfc1395a156c9))
+
+
+### Documentation
+
+* link PyPI package, drop not-on-PyPI note, ignore generated files ([da4abe1](https://github.com/carmelolg/GALib/commit/da4abe1bddd80417aa5d77a6cb64e7db27346cc5))
+
 ## [0.2.2](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.2.1...carmelolg-galib-v0.2.2) (2026-11-17)
 
 
