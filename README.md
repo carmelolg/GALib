@@ -89,5 +89,5 @@ GitHub Pages, `.github/workflows/ci.yml` runs tests, types, lint and the docs bu
 
 ## License
 
-Copyright 2026 CARMELO LA GAMBA. Licensed under the [Apache License, Version 2.0](LICENSE).
+Copyright 2026 [CARMELO LA GAMBA](https://carmelolg.github.io). Licensed under the [Apache License, Version 2.0](LICENSE).
 Redistributions must keep the copyright notices and include the [NOTICE](NOTICE) file.

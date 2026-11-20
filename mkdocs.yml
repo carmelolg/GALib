@@ -4,7 +4,7 @@ site_author: CARMELO LA GAMBA
 site_url: https://carmelolg.github.io/GALib/
 repo_url: https://github.com/carmelolg/GALib
 repo_name: GitHub
-copyright: Copyright &copy; 2026 CARMELO LA GAMBA &middot; Apache License 2.0
+copyright: Copyright &copy; 2026 <a href="https://carmelolg.github.io" target="_blank" rel="noopener">CARMELO LA GAMBA</a> &middot; Apache License 2.0
 
 docs_dir: docs
 
