@@ -41,3 +41,10 @@ Run them from the project root after `pip install -e ".[numpy,plot]"`. `rastrigi
 ```python
 --8<-- "examples/monitoring.py"
 ```
+
+## Built with GALib
+
+[GAPoly](https://carmelolg.github.io/GAPoly/) ([source](https://github.com/carmelolg/GAPoly)) is a larger program built
+on the library: its `Problem` turns a genome of polygons, discs, Voronoi cells, tiles, glyphs or brush strokes into an
+image, and the fitness is the distance from a photo. It uses numpy genomes, parallel evaluation (`workers=N`) and
+callbacks to save the evolution.

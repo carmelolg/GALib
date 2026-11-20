@@ -66,6 +66,11 @@ print(result.best.genome)  # hello world
 - **Performance**: vectorised `fitness_batch`, numpy array genomes, parallel evaluation in chunks (`workers=N`, or any executor).
 - **Reproducible**: each run has its own seeded random generator.
 
+## Built with GALib
+
+- [GAPoly](https://carmelolg.github.io/GAPoly/) evolves polygons, discs, Voronoi cells, tiles, glyphs or brush
+  strokes until they look like a target photo ([source](https://github.com/carmelolg/GAPoly)).
+
 ## Development
 
 ```bash
