@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.3.2...carmelolg-galib-v0.3.3) (2026-11-20)
+
+
+### Documentation
+
+* link the author's site in NOTICE, README and docs footer ([144d51c](https://github.com/carmelolg/GALib/commit/144d51cff6c02738b848ba1f50df8f5817916fac))
+
 ## [0.3.2](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.3.1...carmelolg-galib-v0.3.2) (2026-11-20)
 
 
