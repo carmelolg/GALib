@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.3.1...carmelolg-galib-v0.3.2) (2026-11-20)
+
+
+### Documentation
+
+* mention GAPoly in README and examples ([46b5594](https://github.com/carmelolg/GALib/commit/46b5594ecaf2a49b2923d09f7cd53cae0b88a841))
+
 ## [0.3.1](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.3.0...carmelolg-galib-v0.3.1) (2026-11-18)
 
 
