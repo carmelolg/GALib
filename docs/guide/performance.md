@@ -1,6 +1,6 @@
 # Performance and numpy
 
-In most real problems the **fitness function** dominates the running time. GALib offers three ways to speed
+In most real problems the **fitness function** dominates the running time. GALib offers four ways to speed
 it up.
 
 ## 1. Parallel evaluation
@@ -52,6 +52,30 @@ Vectorised paths are used where they help (uniform and blend crossover, diversit
 comes from a generator derived from the run's seed, so runs stay reproducible.
 
 Install the extra: `pip install "carmelolg-galib[numpy]"`.
+
+## 4. Incremental fitness
+
+When a child is a small change of its parent, its fitness can often be derived from the parent's instead of
+computed from scratch: reversing a segment of a travelling salesman tour changes two edges, not all of them.
+Override `fitness_from_parent(genome, parent)`; `parent` is the `Individual` the child was mutated from, with its
+`genome` and `fitness`.
+
+```python
+class IncrementalTour(Tour):
+    def fitness_from_parent(self, tour, parent):
+        ...  # parent.fitness minus the edges that went away plus the edges that appeared
+        return parent.fitness - removed + added
+```
+
+- The engine calls it only for children that were **mutated and not recombined**. The initial population, crossover
+  children and elites use `fitness` / `fitness_batch`, so keep them correct as well.
+- The result must equal `fitness(genome)` up to rounding. Fall back to `self.fitness(genome)` whenever the shortcut
+  does not apply.
+- It works with `workers` and `executor`. With `parallel="process"` the parent is sent to the worker together with
+  the child.
+- Nothing changes for a problem that does not override it.
+
+`examples/tsp_delta.py` is a complete example; `benchmarks/incremental_tsp.py` compares the two versions.
 
 ## What to expect
 

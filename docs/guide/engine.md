@@ -49,7 +49,7 @@ flowchart LR
 | Method                                    | Default behaviour                                                       |
 |-------------------------------------------|-------------------------------------------------------------------------|
 | `initial_population()`                    | `population_size` random genomes, evaluated                             |
-| `evaluate(genomes)`                       | `problem.fitness_batch`, on chunks in parallel with workers / executor  |
+| `evaluate(genomes, parents=None)`         | `problem.fitness_batch`, on chunks in parallel with workers / executor; with `parents` (only if the problem overrides `fitness_from_parent`) children that were just mutated use that hook |
 | `select(population, count)`               | the selection operator                                                  |
 | `crossover(a, b)` / `mutate(genome)`      | the crossover and mutation operators                                    |
 | `reproduce(population)`                   | `population_size - elite_size` children                                 |

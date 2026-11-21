@@ -28,9 +28,24 @@ def _score(individual: Individual[Any]) -> float:
     return individual.score
 
 
-def _evaluate_chunk(problem: Problem[Any], genomes: Sequence[Any]) -> list[float]:
-    """Evaluate one chunk of genomes (module level, so it can be sent to worker processes)."""
-    return [float(value) for value in problem.fitness_batch(genomes)]
+def _evaluate_chunk(
+    problem: Problem[Any], genomes: Sequence[Any], parents: Sequence[Individual[Any] | None] | None = None
+) -> list[float]:
+    """Evaluate one chunk of genomes (module level, so it can be sent to worker processes).
+
+    With ``parents``, a genome whose parent is not ``None`` goes through ``problem.fitness_from_parent``; the others
+    are still evaluated together by one ``fitness_batch`` call."""
+    if parents is None:
+        return [float(value) for value in problem.fitness_batch(genomes)]
+    values: list[float] = [0.0] * len(genomes)
+    plain = [k for k, parent in enumerate(parents) if parent is None]
+    for k, parent in enumerate(parents):
+        if parent is not None:
+            values[k] = float(problem.fitness_from_parent(genomes[k], parent))
+    if plain:
+        for k, value in zip(plain, problem.fitness_batch([genomes[k] for k in plain]), strict=True):
+            values[k] = float(value)
+    return values
 
 
 class GeneticAlgorithm(Generic[G]):
@@ -245,16 +260,27 @@ class GeneticAlgorithm(Generic[G]):
         """Build and evaluate ``population_size`` random individuals."""
         return self.evaluate([self.problem.random_genome(self.rng) for _ in range(self.population_size)])
 
-    def evaluate(self, genomes: Sequence[G]) -> list[Individual[G]]:
+    def evaluate(
+        self, genomes: Sequence[G], parents: Sequence[Individual[G] | None] | None = None
+    ) -> list[Individual[G]]:
         """Compute the fitness of new genomes: ``problem.fitness_batch`` on the whole batch, or, with
-        ``workers`` / ``executor``, on chunks of it in parallel (see ``evaluate_parallel``)."""
+        ``workers`` / ``executor``, on chunks of it in parallel (see ``evaluate_parallel``).
+
+        ``parents`` (same length as ``genomes``) is given only when the problem overrides ``fitness_from_parent``:
+        the individual a genome was mutated from, or ``None`` when the genome did not come from a plain mutation."""
         if not genomes:
             return []
         executor = self._executor()
         if executor is None:
-            values = list(self.problem.fitness_batch(genomes))
+            values = _evaluate_chunk(self.problem, genomes, parents)
         else:
-            values = self.evaluate_parallel(executor, genomes)
+            # ``parents`` is passed only when there is one: an ``evaluate_parallel`` override written before the hook
+            # existed does not take it
+            values = (
+                self.evaluate_parallel(executor, genomes)
+                if parents is None
+                else self.evaluate_parallel(executor, genomes, parents)
+            )
         if len(values) != len(genomes):
             raise ValueError(f"fitness_batch returned {len(values)} values for {len(genomes)} genomes")
         self.evaluations += len(genomes)
@@ -277,13 +303,21 @@ class GeneticAlgorithm(Generic[G]):
             self._pool = pool_class(max_workers=self.workers)
         return self._pool
 
-    def evaluate_parallel(self, executor: Executor, genomes: Sequence[G]) -> list[float]:
-        """Split ``genomes`` into chunks, evaluate each with ``problem.fitness_batch`` on ``executor`` and
+    def evaluate_parallel(
+        self, executor: Executor, genomes: Sequence[G], parents: Sequence[Individual[G] | None] | None = None
+    ) -> list[float]:
+        """Split ``genomes`` (and ``parents``, if given) into chunks, evaluate each on ``executor`` and
         return the values in order. Override to change how work is divided."""
         size = self.chunk_size or math.ceil(len(genomes) / (self.workers or os.cpu_count() or 1))
-        chunks = [genomes[i : i + size] for i in range(0, len(genomes), size)]
+        starts = range(0, len(genomes), size)
+        chunks = [genomes[i : i + size] for i in starts]
         values: list[float] = []
-        for chunk_values in executor.map(partial(_evaluate_chunk, self.problem), chunks):
+        if parents is None:
+            results = executor.map(partial(_evaluate_chunk, self.problem), chunks)
+        else:
+            parent_chunks = [parents[i : i + size] for i in starts]
+            results = executor.map(partial(_evaluate_chunk, self.problem), chunks, parent_chunks)
+        for chunk_values in results:
             values.extend(chunk_values)
         return values
 
@@ -304,13 +338,19 @@ class GeneticAlgorithm(Generic[G]):
         """Build ``population_size - elite_size`` evaluated children."""
         wanted = self.population_size - self.elite_size
         parents = self.select(population, 2 * math.ceil(wanted / 2))
+        track = self.problem.uses_parent_fitness()
         genomes: list[G] = []
+        origins: list[Individual[G] | None] = []  # the parent of a child that was only mutated, else None
         for first, second in zip(parents[::2], parents[1::2], strict=True):
             a, b = first.genome, second.genome
-            if self.rng.random() < self.crossover_rate:
+            recombine = self.rng.random() < self.crossover_rate
+            if recombine:
                 a, b = self.crossover(a, b)
             genomes.append(self.mutate(a))
             genomes.append(self.mutate(b))
+            origins.extend((None, None) if recombine else (first, second))
+        if track:  # only then: an ``evaluate`` override written before the hook existed takes just ``genomes``
+            return self.evaluate(genomes[:wanted], origins[:wanted])
         return self.evaluate(genomes[:wanted])
 
     def replace(

@@ -27,6 +27,7 @@ neither is rejected when the engine is created.
 | `random_gene(rng)`           | raises `NotImplementedError`             | you want the default mutation (random reset)    |
 | `crossover(a, b, rng)`       | one-point crossover                      | your genome needs a specific crossover          |
 | `mutate(genome, rng, rate)`  | reset each gene with probability `rate`  | your genome needs a specific mutation           |
+| `fitness_from_parent(genome, parent)` | calls `fitness(genome)`         | a small mutation lets you derive the child's fitness from its parent's ([incremental fitness](performance.md#4-incremental-fitness)) |
 
 Operators passed to the [engine](engine.md) take precedence over these methods; see [Operators](operators.md).
 

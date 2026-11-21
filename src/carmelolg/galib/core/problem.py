@@ -9,7 +9,7 @@ from typing import Any, Generic
 
 from ..operators.crossover import OnePoint
 from ..operators.mutation import random_reset
-from .individual import G
+from .individual import G, Individual
 
 _ONE_POINT = OnePoint()
 
@@ -29,6 +29,8 @@ class Problem(ABC, Generic[G]):
     - `random_gene(rng)`: one random gene; enables the default mutation.
     - `mutate(...)`: replace the default mutation entirely.
     - `crossover(...)`: replace the default one-point crossover.
+    - `fitness_from_parent(genome, parent)`: compute the fitness of a mutated child from its parent's, when that is
+      much cheaper than evaluating the child from scratch (opt-in, see its docstring).
 
     The defaults for `crossover` and `mutate` work on str, bytes, tuple, list and numpy array genomes.
     For permutations or real values use the operators in `carmelolg.galib.operators`; for any other
@@ -58,6 +60,22 @@ class Problem(ABC, Generic[G]):
         """
         self.check_fitness_implemented()
         return [self.fitness(genome) for genome in genomes]
+
+    def fitness_from_parent(self, genome: G, parent: Individual[G]) -> float:
+        """Return the fitness of ``genome``, a child made by **mutating** ``parent`` alone.
+
+        Override it when the fitness of a small change can be derived from the parent's: ``parent.genome`` and
+        ``parent.fitness`` are available (a travelling salesman tour with one reversed segment changes two edges, not
+        all of them). The engine calls it only for children that were mutated and not recombined; the initial
+        population, crossover children and elites go through ``fitness`` / ``fitness_batch``. The result must
+        equal ``fitness(genome)`` up to rounding; it may call ``fitness`` itself when the shortcut does not apply.
+        With ``parallel="process"`` the parent travels with the child to the worker. The default is ``fitness``.
+        """
+        return self.fitness(genome)
+
+    def uses_parent_fitness(self) -> bool:
+        """True if ``fitness_from_parent`` is overridden, so the engine has to remember each child's parent."""
+        return type(self).fitness_from_parent is not Problem.fitness_from_parent
 
     def check_fitness_implemented(self) -> None:
         """Raise TypeError if neither ``fitness`` nor ``fitness_batch`` is overridden."""

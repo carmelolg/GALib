@@ -9,6 +9,7 @@ Run them from the project root after `pip install -e ".[numpy,plot]"`. `rastrigi
 | `phrase.py`      | string                | the defaults only; live progress on a single line                              |
 | `knapsack.py`    | list of bits          | the three customisation levels: parameters, operators, a subclassed engine     |
 | `tsp.py`         | permutation           | minimisation, `OrderCrossover`, `InversionMutation`                            |
+| `tsp_delta.py`   | permutation           | `fitness_from_parent`: incremental fitness for mutated children                |
 | `rastrigin.py`   | numpy array of floats | vectorised `fitness_batch`, `BlendCrossover`, `GaussianMutation`, `gene_spread` |
 | `monitoring.py`  | string                | the `Result`, the history, diversity metrics, `plot_history`                   |
 
@@ -28,6 +29,12 @@ Run them from the project root after `pip install -e ".[numpy,plot]"`. `rastrigi
 
 ```python
 --8<-- "examples/tsp.py"
+```
+
+## Travelling salesman, incremental fitness
+
+```python
+--8<-- "examples/tsp_delta.py"
 ```
 
 ## Rastrigin function
