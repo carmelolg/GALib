@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.3.3...carmelolg-galib-v0.4.0) (2026-11-21)
+
+
+### Features
+
+* fitness_from_parent hook for incremental fitness of mutated children ([74cd4b5](https://github.com/carmelolg/GALib/commit/74cd4b57494fd2cc1213d0654e540ca66c5c12df))
+
 ## [0.3.3](https://github.com/carmelolg/GALib/compare/carmelolg-galib-v0.3.2...carmelolg-galib-v0.3.3) (2026-11-20)
 
 
